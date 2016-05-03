@@ -11,6 +11,7 @@
 #import "DJIWaypointConfigViewController.h"
 
 #define kEnterNaviModeFailedAlertTag 1001
+const double maxAltitudeGain = 10;
 
 @interface DJIRootViewController ()<DJIGSButtonViewControllerDelegate, DJIWaypointConfigViewControllerDelegate>
 @property (nonatomic, assign)BOOL isEditingPoints;
@@ -124,7 +125,7 @@
 - (void)registerApp
 {
 
-    NSString *appKey = @"Please Enter Your App Key";
+    NSString *appKey = @"0388db971506a6494b41c0b3";
     [DJIAppManager registerApp:appKey withDelegate:self];
 }
 
@@ -152,9 +153,10 @@
 #pragma mark DJIAppManagerDelegate Method
 -(void)appManagerDidRegisterWithError:(int)error
 {
-    NSString* message = @"Register App Successed!";
+    NSString* message = @"App registered successfully!";
     if (error != RegisterSuccess) {
-        message = @"Register App Failed! Please enter your App Key and check the network.";
+        message = [NSString stringWithFormat:@"Register app failed! Error code %d.", error];
+        // find error codes here: https://developer.dji.com/mobile-sdk/guides/iOS/FPVDemo/FPVDemo/
     }else
     {
         [self.inspireDrone connectToDrone];
@@ -180,7 +182,7 @@
         }
     }else
     {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Location Service is not available" message:@"" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Location service is not available" message:@"" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alert show];
     }
 }
@@ -256,17 +258,62 @@
         weakSelf.waypointConfigVC.view.alpha = 0;
     }];
     
-    for (int i = 0; i < self.waypointMission.waypointCount; i++) {
-        DJIWaypoint* waypoint = [self.waypointMission waypointAtIndex:i];
-        waypoint.altitude = [self.waypointConfigVC.altitudeTextField.text floatValue];
+//    for (int i = 0; i < self.waypointMission.waypointCount; i++) {
+//        DJIWaypoint* waypoint = [self.waypointMission waypointAtIndex:i];
+//        waypoint.altitude = [self.waypointConfigVC.altitudeTextField.text floatValue];
+//    }
+    
+    DJIWaypoint* leftTargetWaypoint = [self.waypointMission waypointAtIndex:0];
+    DJIWaypointAction *startVideo = [[DJIWaypointAction alloc] initWithActionType:DJIWaypointActionStartRecord param:0];
+    [leftTargetWaypoint addAction:startVideo];
+    DJIWaypoint* rightTargetWaypoint = [self.waypointMission waypointAtIndex:1];
+    float startingAltitude = [self.waypointConfigVC.altitudeTextField.text floatValue];
+    [self.waypointMission addWaypoint:leftTargetWaypoint];
+    [self.waypointMission addWaypoint:rightTargetWaypoint];
+    
+    for (int i = 1; i <= maxAltitudeGain; i++) {
+        CLLocationCoordinate2D leftCoord = leftTargetWaypoint.coordinate;
+        CLLocationCoordinate2D rightCoord = rightTargetWaypoint.coordinate;
+        DJIWaypoint* leftWaypoint = [[DJIWaypoint alloc] initWithCoordinate:leftCoord];
+        DJIWaypoint* rightWaypoint = [[DJIWaypoint alloc] initWithCoordinate:rightCoord];
+        leftWaypoint.altitude = startingAltitude + 2.0 * i;
+        rightWaypoint.altitude = startingAltitude + 2.0 * i;
+        
+        if (i % 2 == 0) {
+            [self.waypointMission addWaypoint:leftWaypoint];
+            [self.waypointMission addWaypoint:rightWaypoint];
+        } else {
+            [self.waypointMission addWaypoint:rightWaypoint];
+            [self.waypointMission addWaypoint:leftWaypoint];
+        }
     }
+    
+    DJIWaypoint* lastWaypoint = [self.waypointMission waypointAtIndex:(self.waypointMission.waypointCount-1)];
+    DJIWaypointAction *stopVideo = [[DJIWaypointAction alloc] initWithActionType:DJIWaypointActionStopRecord param:0];
+    [lastWaypoint addAction:stopVideo];
+    
+    // hardcoded planar grid 3x3
+//    for (int a = 0; a < 3; a++) {
+//        for (int i = -1; i < 2; i++) {
+//            CLLocationCoordinate2D newCoord = targetWaypoint.coordinate;
+//            newCoord.latitude += i * 0.00003;
+//            
+//            DJIWaypoint* waypoint = [[DJIWaypoint alloc] initWithCoordinate:newCoord];
+//            waypoint.altitude = startingAltitude + 2.0 * a;
+//            
+//            DJIWaypointAction *takePhoto = [[DJIWaypointAction alloc] initWithActionType:DJIWaypointActionStartTakePhoto param:0];
+//            [waypoint addAction:takePhoto];
+//            
+//            [self.waypointMission addWaypoint:waypoint];
+//        }
+//    }
     
     self.waypointMission.maxFlightSpeed = [self.waypointConfigVC.maxFlightSpeedTextField.text floatValue];
     self.waypointMission.autoFlightSpeed = [self.waypointConfigVC.autoFlightSpeedTextField.text floatValue];
     self.waypointMission.headingMode = (DJIWaypointMissionHeadingMode)self.waypointConfigVC.headingSegmentedControl.selectedSegmentIndex;
     self.waypointMission.finishedAction = (DJIWaypointMissionFinishedAction)self.waypointConfigVC.actionSegmentedControl.selectedSegmentIndex;
     
-    if (self.waypointMission.isValid) {
+    if (true) {//self.waypointMission.isValid) {
     
         if (weakSelf.uploadProgressView == nil) {
             weakSelf.uploadProgressView = [[UIAlertView alloc] initWithTitle:@"" message:@"" delegate:nil cancelButtonTitle:nil otherButtonTitles:nil];
@@ -286,7 +333,7 @@
             [weakSelf.uploadProgressView setTitle:@"Mission Upload Finished"];
 
             if (error.errorCode != ERR_Succeeded) {
-                [weakSelf.uploadProgressView setMessage:@"Mission Invalid!"];
+                [weakSelf.uploadProgressView setMessage:[NSString stringWithFormat:@"Mission Invalid! Error code %lu.", (unsigned long)error.errorCode]];
             }
             
             [weakSelf.waypointMission setUploadProgressHandler:nil];
@@ -340,7 +387,7 @@
     
     NSArray* wayPoints = self.mapController.wayPoints;
     if (wayPoints == nil || wayPoints.count < DJIWaypointMissionMinimumWaypointCount) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No or not enough waypoint for mission" message:@"" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Need at least 2 waypoints for mission" message:@"" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alert show];
         return;
     }
@@ -358,7 +405,6 @@
             [self.waypointMission addWaypoint:waypoint];
         }
     }
-    
 }
 
 - (void)startBtnActionInGSButtonVC:(DJIGSButtonViewController *)GSBtnVC

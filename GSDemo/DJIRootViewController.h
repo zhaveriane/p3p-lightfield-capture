@@ -12,6 +12,8 @@
 #import <MapKit/MapKit.h>
 #import <CoreLocation/CoreLocation.h>
 
+const double maxAltitudeGain;
+
 @interface DJIRootViewController : UIViewController<MKMapViewDelegate, CLLocationManagerDelegate, DJIDroneDelegate, DJIMainControllerDelegate, GroundStationDelegate, DJINavigationDelegate, DJIAppManagerDelegate>
 
 @property (nonatomic, strong) DJIMapController *mapController;
@@ -36,6 +38,5 @@
 @property(nonatomic, weak) NSObject<DJIWaypointMission>* waypointMission;
 
 @property(nonatomic, strong) UIAlertView* uploadProgressView;
-
 
 @end

@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9201D6F41BF61E61003780E0 /* SphericalCoordinate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9201D6F31BF61E61003780E0 /* SphericalCoordinate.m */; settings = {ASSET_TAGS = (); }; };
+		9201D6F71BF62165003780E0 /* CartesianCoordinate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9201D6F61BF62165003780E0 /* CartesianCoordinate.m */; settings = {ASSET_TAGS = (); }; };
+		923997271BE7ADF400CF5416 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 923997261BE7ADF400CF5416 /* libz.tbd */; };
+		9239972B1BE7AE0A00CF5416 /* libstdc++.6.0.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 9239972A1BE7AE0A00CF5416 /* libstdc++.6.0.9.tbd */; };
 		A402A0701B4BC22400129605 /* DJIRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A402A06F1B4BC22400129605 /* DJIRootViewController.m */; };
 		A402A0741B4BC43800129605 /* DJIMapController.m in Sources */ = {isa = PBXBuildFile; fileRef = A402A0721B4BC43800129605 /* DJIMapController.m */; };
 		A402A07A1B4BDAE400129605 /* DJIAircraftAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = A402A0771B4BDAE400129605 /* DJIAircraftAnnotation.m */; };
@@ -38,6 +42,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		9201D6F21BF61E61003780E0 /* SphericalCoordinate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SphericalCoordinate.h; sourceTree = "<group>"; };
+		9201D6F31BF61E61003780E0 /* SphericalCoordinate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SphericalCoordinate.m; sourceTree = "<group>"; };
+		9201D6F51BF62165003780E0 /* CartesianCoordinate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CartesianCoordinate.h; sourceTree = "<group>"; };
+		9201D6F61BF62165003780E0 /* CartesianCoordinate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CartesianCoordinate.m; sourceTree = "<group>"; };
+		923997261BE7ADF400CF5416 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		923997281BE7ADFF00CF5416 /* libstdc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.tbd"; path = "usr/lib/libstdc++.tbd"; sourceTree = SDKROOT; };
+		9239972A1BE7AE0A00CF5416 /* libstdc++.6.0.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.6.0.9.tbd"; path = "usr/lib/libstdc++.6.0.9.tbd"; sourceTree = SDKROOT; };
 		A402A06E1B4BC22400129605 /* DJIRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DJIRootViewController.h; sourceTree = "<group>"; };
 		A402A06F1B4BC22400129605 /* DJIRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DJIRootViewController.m; sourceTree = "<group>"; };
 		A402A0711B4BC43800129605 /* DJIMapController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DJIMapController.h; sourceTree = "<group>"; };
@@ -74,6 +85,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9239972B1BE7AE0A00CF5416 /* libstdc++.6.0.9.tbd in Frameworks */,
+				923997271BE7ADF400CF5416 /* libz.tbd in Frameworks */,
 				A4F9574C1B4ADD570017733D /* MapKit.framework in Frameworks */,
 				A4E86BA11B4A573400F204DA /* libz.dylib in Frameworks */,
 				A4E86B9F1B4A572C00F204DA /* libstdc++.6.0.9.dylib in Frameworks */,
@@ -133,6 +146,10 @@
 				A4E86B821B4A374300F204DA /* Images.xcassets */,
 				A4E86B841B4A374300F204DA /* LaunchScreen.xib */,
 				A4E86B751B4A374300F204DA /* Supporting Files */,
+				9201D6F21BF61E61003780E0 /* SphericalCoordinate.h */,
+				9201D6F31BF61E61003780E0 /* SphericalCoordinate.m */,
+				9201D6F51BF62165003780E0 /* CartesianCoordinate.h */,
+				9201D6F61BF62165003780E0 /* CartesianCoordinate.m */,
 			);
 			path = GSDemo;
 			sourceTree = "<group>";
@@ -166,6 +183,9 @@
 		A4E86B9B1B4A56C600F204DA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9239972A1BE7AE0A00CF5416 /* libstdc++.6.0.9.tbd */,
+				923997281BE7ADFF00CF5416 /* libstdc++.tbd */,
+				923997261BE7ADF400CF5416 /* libz.tbd */,
 				A4F9574B1B4ADD570017733D /* MapKit.framework */,
 				A4E86BA01B4A573400F204DA /* libz.dylib */,
 				A4E86B9E1B4A572C00F204DA /* libstdc++.6.0.9.dylib */,
@@ -224,6 +244,7 @@
 				TargetAttributes = {
 					A4E86B711B4A374300F204DA = {
 						CreatedOnToolsVersion = 6.3;
+						DevelopmentTeam = LH634WPJ7B;
 					};
 					A4E86B8A1B4A374300F204DA = {
 						CreatedOnToolsVersion = 6.3;
@@ -278,12 +299,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				A402A07A1B4BDAE400129605 /* DJIAircraftAnnotation.m in Sources */,
+				9201D6F41BF61E61003780E0 /* SphericalCoordinate.m in Sources */,
 				A4EBC0831B5234E300462D63 /* DJIWaypointConfigViewController.m in Sources */,
 				A402A0701B4BC22400129605 /* DJIRootViewController.m in Sources */,
 				A4F82A841B4F7BC7006071DE /* DJIGSButtonViewController.m in Sources */,
 				A402A0741B4BC43800129605 /* DJIMapController.m in Sources */,
 				A402A07B1B4BDAE400129605 /* DJIAircraftAnnotationView.m in Sources */,
 				A4E86B7B1B4A374300F204DA /* AppDelegate.m in Sources */,
+				9201D6F71BF62165003780E0 /* CartesianCoordinate.m in Sources */,
 				A4E86B781B4A374300F204DA /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -343,6 +366,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -387,6 +411,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -412,6 +437,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -420,7 +447,9 @@
 				INFOPLIST_FILE = GSDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.sarahliu.GSDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -428,6 +457,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -436,7 +467,9 @@
 				INFOPLIST_FILE = GSDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.sarahliu.GSDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};
