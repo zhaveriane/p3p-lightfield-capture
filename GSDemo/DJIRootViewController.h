@@ -36,6 +36,7 @@ const double maxAltitudeGain;
 
 @property(nonatomic, weak) NSObject<DJINavigation>* navigationManager;
 @property(nonatomic, weak) NSObject<DJIWaypointMission>* waypointMission;
+@property(nonatomic, weak) NSObject<DJIHotPointMission>* hotpointMission;
 
 @property(nonatomic, strong) UIAlertView* uploadProgressView;
 

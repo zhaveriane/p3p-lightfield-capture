@@ -24,6 +24,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *maxFlightSpeedTextField;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *actionSegmentedControl;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *headingSegmentedControl;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *flightGeometrySegmentedControl;
 
 @property (weak, nonatomic) id <DJIWaypointConfigViewControllerDelegate>delegate;
 

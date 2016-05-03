@@ -33,6 +33,7 @@
     self.maxFlightSpeedTextField.text = @"10"; //Set the maxFlightSpeed to 10
     [self.actionSegmentedControl setSelectedSegmentIndex:1]; //Set the finishAction to DJIWaypointMissionFinishedGoHome
     [self.headingSegmentedControl setSelectedSegmentIndex:0]; //Set the headingMode to DJIWaypointMissionHeadingAuto
+    [self.flightGeometrySegmentedControl setSelectedSegmentIndex:0]; // Default flight geometry planar
     
 }
 
