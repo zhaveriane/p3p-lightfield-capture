@@ -125,6 +125,10 @@ typedef NS_ENUM(NSUInteger, DJIWaypointMissionHeadingMode){
      *  Aircraft's heading will be set based on each individual waypoint's heading value
      */
     DJIWaypointMissionHeadingUsingWaypointHeading,
+    /**
+     *  Aircraft's heading will always toward point of interest.
+     */
+    DJIWaypointMissionHeadingTowardPointOfInterest,
 };
 
 typedef NS_ENUM(NSUInteger, DJIWaypointMissionFlightPathMode)

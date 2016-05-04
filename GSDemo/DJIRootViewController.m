@@ -254,22 +254,23 @@ const double maxAltitudeGain = 10;
 - (void)finishBtnActionInDJIWaypointConfigViewController:(DJIWaypointConfigViewController *)waypointConfigVC
 {
     __weak DJIRootViewController *weakSelf = self;
-    
+ 
     [UIView animateWithDuration:0.25 animations:^{
         weakSelf.waypointConfigVC.view.alpha = 0;
     }];
-    
+  
     NSInteger flightPathGeometry = self.waypointConfigVC.flightGeometrySegmentedControl.selectedSegmentIndex;
     
-    if (flightPathGeometry == 0) { // planar
+    if (flightPathGeometry == 0) {
         DJIWaypoint* leftTargetWaypoint = [self.waypointMission waypointAtIndex:0];
         DJIWaypointAction *startVideo = [[DJIWaypointAction alloc] initWithActionType:DJIWaypointActionStartRecord param:0];
         [leftTargetWaypoint addAction:startVideo];
         DJIWaypoint* rightTargetWaypoint = [self.waypointMission waypointAtIndex:1];
         float startingAltitude = [self.waypointConfigVC.altitudeTextField.text floatValue];
+        [self.waypointMission removeAllWaypoints];
         [self.waypointMission addWaypoint:leftTargetWaypoint];
         [self.waypointMission addWaypoint:rightTargetWaypoint];
-        
+    
         for (int i = 1; i <= maxAltitudeGain; i++) {
             CLLocationCoordinate2D leftCoord = leftTargetWaypoint.coordinate;
             CLLocationCoordinate2D rightCoord = rightTargetWaypoint.coordinate;
@@ -277,7 +278,7 @@ const double maxAltitudeGain = 10;
             DJIWaypoint* rightWaypoint = [[DJIWaypoint alloc] initWithCoordinate:rightCoord];
             leftWaypoint.altitude = startingAltitude + 2.0 * i;
             rightWaypoint.altitude = startingAltitude + 2.0 * i;
-            
+        
             if (i % 2 == 0) {
                 [self.waypointMission addWaypoint:leftWaypoint];
                 [self.waypointMission addWaypoint:rightWaypoint];
@@ -286,12 +287,19 @@ const double maxAltitudeGain = 10;
                 [self.waypointMission addWaypoint:leftWaypoint];
             }
         }
-    } else if (flightPathGeometry == 1) { // cylindrical
+    } else if (flightPathGeometry == 1) {
         DJIWaypoint* centerTargetWaypoint = [self.waypointMission waypointAtIndex:0];
         DJIWaypointAction *startVideo = [[DJIWaypointAction alloc] initWithActionType:DJIWaypointActionStartRecord param:0];
         [centerTargetWaypoint addAction:startVideo];
         DJIWaypoint* radiusTargetWaypoint = [self.waypointMission waypointAtIndex:1];
         float startingAltitude = [self.waypointConfigVC.altitudeTextField.text floatValue];
+        //        [self.waypointMission addWaypoint:centerTargetWaypoint];
+        //        [self.waypointMission addWaypoint:radiusTargetWaypoint];
+    
+        CLLocationCoordinate2D pointOfInterest = centerTargetWaypoint.coordinate;
+        DJIWaypointMissionFlightPathMode flightPathMode = DJIWaypointMissionFlightPathCurved;
+        DJIWaypointMissionHeadingMode headingMode = DJIWaypointMissionHeadingTowardPointOfInterest;
+     
     }
     
     DJIWaypoint* lastWaypoint = [self.waypointMission waypointAtIndex:(self.waypointMission.waypointCount-1)];
@@ -302,26 +310,23 @@ const double maxAltitudeGain = 10;
     self.waypointMission.autoFlightSpeed = [self.waypointConfigVC.autoFlightSpeedTextField.text floatValue];
     self.waypointMission.headingMode = (DJIWaypointMissionHeadingMode)self.waypointConfigVC.headingSegmentedControl.selectedSegmentIndex;
     self.waypointMission.finishedAction = (DJIWaypointMissionFinishedAction)self.waypointConfigVC.actionSegmentedControl.selectedSegmentIndex;
-    
+  
     if (self.waypointMission.isValid) {
-    
         if (weakSelf.uploadProgressView == nil) {
             weakSelf.uploadProgressView = [[UIAlertView alloc] initWithTitle:@"" message:@"" delegate:nil cancelButtonTitle:nil otherButtonTitles:nil];
             [weakSelf.uploadProgressView show];
         }
-
         [self.waypointMission setUploadProgressHandler:^(uint8_t progress) {
-            
             [weakSelf.uploadProgressView setTitle:@"Mission Uploading"];
             NSString* message = [NSString stringWithFormat:@"%d%%", progress];
             [weakSelf.uploadProgressView setMessage:message];
-            
+         
         }];
-
+    
         [self.waypointMission uploadMissionWithResult:^(DJIError *error) {
-
+      
             [weakSelf.uploadProgressView setTitle:@"Mission Upload Finished"];
-
+            
             if (error.errorCode != ERR_Succeeded) {
                 [weakSelf.uploadProgressView setMessage:[NSString stringWithFormat:@"Mission Invalid! Error code %lu.", (unsigned long)error.errorCode]];
             }
@@ -335,15 +340,12 @@ const double maxAltitudeGain = 10;
                     [alertView show];
                 }
             }];
-            
         }];
-
     }else
     {
         UIAlertView *invalidMissionAlert = [[UIAlertView alloc] initWithTitle:@"Waypoint mission invalid" message:@"" delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
         [invalidMissionAlert show];
     }
-    
 }
 
 #pragma mark - DJIGSButtonViewController Delegate Methods
