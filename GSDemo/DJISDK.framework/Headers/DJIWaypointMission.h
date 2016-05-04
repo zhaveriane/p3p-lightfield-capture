@@ -104,25 +104,21 @@ typedef NS_ENUM(uint8_t, DJIWaypointMissionFinishedAction)
 /**
  *  Current waypoint mission heading mode.
  */
-typedef NS_ENUM(NSUInteger, DJIWaypointMissionHeadingMode){
+typedef NS_ENUM (NSUInteger, DJIWaypointMissionHeadingMode){
     /**
-     *  Aircraft's heading alway be the tangent to the direction of the path to each 
-     *  of the waypoints in the waypoint mission. For example, when the aircarft is
-     *  moving past a waypoint along a curved path, the heading of the aicraft will be
-     *  tangent to the curve.
+     *  Aircraft's heading will always be in the direction of flight.
      */
     DJIWaypointMissionHeadingAuto,
     /**
-     *  Aircraft's heading will be set to the initial direction the aircraft
-     *  took off from.
+     *  Aircraft's heading will be set to the initial take-off heading.
      */
     DJIWaypointMissionHeadingUsingInitialDirection,
     /**
      *  Aircraft's heading will be controlled by the remote controller.
      */
-    DJIWaypointMissionHeadingControlByRemoteController,
+    DJIWaypointMissionHeadingControledByRemoteController,
     /**
-     *  Aircraft's heading will be set based on each individual waypoint's heading value
+     *  Aircraft's heading will gradually change between waypoints.
      */
     DJIWaypointMissionHeadingUsingWaypointHeading,
     /**
@@ -209,6 +205,12 @@ typedef NS_ENUM(NSUInteger, DJIWaypointMissionFlightPathMode)
  *  Flight path mode of the waypoint mission.
  */
 @property(nonatomic, assign) DJIWaypointMissionFlightPathMode flightPathMode;
+
+/**
+ *  Property is used when `headingMode` is `DJIWaypointMissionHeadingTowardPointOfInterest`. Aircraft will always be heading to
+ *  point while executing mission. Default is `kCLLocationCoordinate2DInvalid`.
+ */
+@property(nonatomic, assign) CLLocationCoordinate2D pointOfInterest;
 
 /**
  *  Add a waypoint to the waypoint mission. The maximum number of waypoints should not larger then DJIWaypointMissionMaximumWaypointCount. and DJIWaypointMissionMinimumWaypointCount at least. The distance(three dimensions) between adjacent two waypoints should be in range (2, 2000) meters.

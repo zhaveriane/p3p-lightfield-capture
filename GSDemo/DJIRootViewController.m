@@ -13,6 +13,8 @@
 #define kEnterNaviModeFailedAlertTag 1001
 const double maxAltitudeGain = 10;
 
+#define degToRad(deg) ((M_PI * deg)/180);
+
 @interface DJIRootViewController ()<DJIGSButtonViewControllerDelegate, DJIWaypointConfigViewControllerDelegate>
 @property (nonatomic, assign)BOOL isEditingPoints;
 @property (nonatomic, strong)DJIGSButtonViewController *gsButtonVC;
@@ -287,18 +289,43 @@ const double maxAltitudeGain = 10;
                 [self.waypointMission addWaypoint:leftWaypoint];
             }
         }
+        
+        self.waypointMission.headingMode = DJIWaypointMissionHeadingUsingInitialDirection;
     } else if (flightPathGeometry == 1) {
         DJIWaypoint* centerTargetWaypoint = [self.waypointMission waypointAtIndex:0];
         DJIWaypointAction *startVideo = [[DJIWaypointAction alloc] initWithActionType:DJIWaypointActionStartRecord param:0];
         [centerTargetWaypoint addAction:startVideo];
         DJIWaypoint* radiusTargetWaypoint = [self.waypointMission waypointAtIndex:1];
         float startingAltitude = [self.waypointConfigVC.altitudeTextField.text floatValue];
+        [self.waypointMission removeAllWaypoints];
         //        [self.waypointMission addWaypoint:centerTargetWaypoint];
         //        [self.waypointMission addWaypoint:radiusTargetWaypoint];
-    
+        
+        // See haversine formula for calculating distance based on long/lat coords
+        long double earthRadius = 6371000.0f; // meters
+        long double lat1 = degToRad(centerTargetWaypoint.coordinate.latitude);
+        long double lat2 = degToRad(radiusTargetWaypoint.coordinate.latitude);
+        long double long1 = degToRad(centerTargetWaypoint.coordinate.longitude);
+        long double long2 = degToRad(radiusTargetWaypoint.coordinate.longitude);
+        long double latDiff = lat2 - lat1;
+        long double longDiff = long2 - long1;
+        long double a = sinl(latDiff/2.0f) * sinl(latDiff/2.0f) + cosl(lat1) * cosl(lat2) * sinl(longDiff/2.0f) * sinl(longDiff/2.0f);
+        long double c = 2.0f * atan2l(sqrtl(a), sqrtl(1.0f - a));
+        long double cylindricalRadius = earthRadius * c;
+        
+        for (int i = 0; i <= maxAltitudeGain; i++) {
+            CLLocationCoordinate2D cylindricalCoord = radiusTargetWaypoint.coordinate;
+            DJIWaypoint* cylindricalWaypoint = [[DJIWaypoint alloc] initWithCoordinate:cylindricalCoord];
+            cylindricalWaypoint.altitude = startingAltitude + 2.0 * i;
+            cylindricalWaypoint.cornerRadius = cylindricalRadius;
+            
+            [self.waypointMission addWaypoint:cylindricalWaypoint];
+        }
+        
         CLLocationCoordinate2D pointOfInterest = centerTargetWaypoint.coordinate;
-        DJIWaypointMissionFlightPathMode flightPathMode = DJIWaypointMissionFlightPathCurved;
-        DJIWaypointMissionHeadingMode headingMode = DJIWaypointMissionHeadingTowardPointOfInterest;
+        self.waypointMission.pointOfInterest = pointOfInterest;
+        self.waypointMission.flightPathMode = DJIWaypointMissionFlightPathCurved;
+        self.waypointMission.headingMode = DJIWaypointMissionHeadingTowardPointOfInterest;
      
     }
     
@@ -308,7 +335,7 @@ const double maxAltitudeGain = 10;
     
     self.waypointMission.maxFlightSpeed = [self.waypointConfigVC.maxFlightSpeedTextField.text floatValue];
     self.waypointMission.autoFlightSpeed = [self.waypointConfigVC.autoFlightSpeedTextField.text floatValue];
-    self.waypointMission.headingMode = (DJIWaypointMissionHeadingMode)self.waypointConfigVC.headingSegmentedControl.selectedSegmentIndex;
+//    self.waypointMission.headingMode = (DJIWaypointMissionHeadingMode)self.waypointConfigVC.headingSegmentedControl.selectedSegmentIndex;
     self.waypointMission.finishedAction = (DJIWaypointMissionFinishedAction)self.waypointConfigVC.actionSegmentedControl.selectedSegmentIndex;
   
     if (self.waypointMission.isValid) {
